@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iweb.mall.mapper.OrdersMapper">
+  <resultMap id="BaseResultMap" type="com.iweb.mall.model.Orders">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="shoppingid" jdbcType="VARCHAR" property="shoppingid" />
+    <result column="payment" jdbcType="DECIMAL" property="payment" />
+    <result column="paymenttype" jdbcType="INTEGER" property="paymenttype" />
+    <result column="postage" jdbcType="INTEGER" property="postage" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="paymenttime" jdbcType="TIMESTAMP" property="paymenttime" />
+    <result column="sendtime" jdbcType="TIMESTAMP" property="sendtime" />
+    <result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
+    <result column="closetime" jdbcType="TIMESTAMP" property="closetime" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, userid, shoppingid, payment, paymenttype, postage, status, paymenttime, sendtime, 
+    endtime, closetime, createtime, updatetime
+  </sql>
+  <select id="selectByExample" parameterType="com.iweb.mall.model.OrdersExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orders
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from orders
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.iweb.mall.model.OrdersExample">
+    delete from orders
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.iweb.mall.model.Orders">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into orders (userid, shoppingid, payment, 
+      paymenttype, postage, status, 
+      paymenttime, sendtime, endtime, 
+      closetime, createtime, updatetime
+      )
+    values (#{userid,jdbcType=VARCHAR}, #{shoppingid,jdbcType=VARCHAR}, #{payment,jdbcType=DECIMAL}, 
+      #{paymenttype,jdbcType=INTEGER}, #{postage,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{paymenttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, 
+      #{closetime,jdbcType=TIMESTAMP}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.iweb.mall.model.Orders">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="shoppingid != null">
+        shoppingid,
+      </if>
+      <if test="payment != null">
+        payment,
+      </if>
+      <if test="paymenttype != null">
+        paymenttype,
+      </if>
+      <if test="postage != null">
+        postage,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="paymenttime != null">
+        paymenttime,
+      </if>
+      <if test="sendtime != null">
+        sendtime,
+      </if>
+      <if test="endtime != null">
+        endtime,
+      </if>
+      <if test="closetime != null">
+        closetime,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="shoppingid != null">
+        #{shoppingid,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null">
+        #{payment,jdbcType=DECIMAL},
+      </if>
+      <if test="paymenttype != null">
+        #{paymenttype,jdbcType=INTEGER},
+      </if>
+      <if test="postage != null">
+        #{postage,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="paymenttime != null">
+        #{paymenttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtime != null">
+        #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closetime != null">
+        #{closetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.iweb.mall.model.OrdersExample" resultType="java.lang.Long">
+    select count(*) from orders
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update orders
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=VARCHAR},
+      </if>
+      <if test="row.userid != null">
+        userid = #{row.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="row.shoppingid != null">
+        shoppingid = #{row.shoppingid,jdbcType=VARCHAR},
+      </if>
+      <if test="row.payment != null">
+        payment = #{row.payment,jdbcType=DECIMAL},
+      </if>
+      <if test="row.paymenttype != null">
+        paymenttype = #{row.paymenttype,jdbcType=INTEGER},
+      </if>
+      <if test="row.postage != null">
+        postage = #{row.postage,jdbcType=INTEGER},
+      </if>
+      <if test="row.status != null">
+        status = #{row.status,jdbcType=INTEGER},
+      </if>
+      <if test="row.paymenttime != null">
+        paymenttime = #{row.paymenttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.sendtime != null">
+        sendtime = #{row.sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.endtime != null">
+        endtime = #{row.endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.closetime != null">
+        closetime = #{row.closetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.createtime != null">
+        createtime = #{row.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updatetime != null">
+        updatetime = #{row.updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update orders
+    set id = #{row.id,jdbcType=VARCHAR},
+      userid = #{row.userid,jdbcType=VARCHAR},
+      shoppingid = #{row.shoppingid,jdbcType=VARCHAR},
+      payment = #{row.payment,jdbcType=DECIMAL},
+      paymenttype = #{row.paymenttype,jdbcType=INTEGER},
+      postage = #{row.postage,jdbcType=INTEGER},
+      status = #{row.status,jdbcType=INTEGER},
+      paymenttime = #{row.paymenttime,jdbcType=TIMESTAMP},
+      sendtime = #{row.sendtime,jdbcType=TIMESTAMP},
+      endtime = #{row.endtime,jdbcType=TIMESTAMP},
+      closetime = #{row.closetime,jdbcType=TIMESTAMP},
+      createtime = #{row.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{row.updatetime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iweb.mall.model.Orders">
+    update orders
+    <set>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="shoppingid != null">
+        shoppingid = #{shoppingid,jdbcType=VARCHAR},
+      </if>
+      <if test="payment != null">
+        payment = #{payment,jdbcType=DECIMAL},
+      </if>
+      <if test="paymenttype != null">
+        paymenttype = #{paymenttype,jdbcType=INTEGER},
+      </if>
+      <if test="postage != null">
+        postage = #{postage,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="paymenttime != null">
+        paymenttime = #{paymenttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtime != null">
+        sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null">
+        endtime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closetime != null">
+        closetime = #{closetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iweb.mall.model.Orders">
+    update orders
+    set userid = #{userid,jdbcType=VARCHAR},
+      shoppingid = #{shoppingid,jdbcType=VARCHAR},
+      payment = #{payment,jdbcType=DECIMAL},
+      paymenttype = #{paymenttype,jdbcType=INTEGER},
+      postage = #{postage,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      paymenttime = #{paymenttime,jdbcType=TIMESTAMP},
+      sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      endtime = #{endtime,jdbcType=TIMESTAMP},
+      closetime = #{closetime,jdbcType=TIMESTAMP},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

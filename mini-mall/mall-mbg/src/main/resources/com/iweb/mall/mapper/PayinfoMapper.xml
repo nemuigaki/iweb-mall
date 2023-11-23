@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iweb.mall.mapper.PayinfoMapper">
+  <resultMap id="BaseResultMap" type="com.iweb.mall.model.Payinfo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="orderid" jdbcType="VARCHAR" property="orderid" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="payplatform" jdbcType="INTEGER" property="payplatform" />
+    <result column="platformnumber" jdbcType="VARCHAR" property="platformnumber" />
+    <result column="platformstatus" jdbcType="VARCHAR" property="platformstatus" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, orderid, userid, payplatform, platformnumber, platformstatus, createtime, updatetime
+  </sql>
+  <select id="selectByExample" parameterType="com.iweb.mall.model.PayinfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from payinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from payinfo
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from payinfo
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.iweb.mall.model.PayinfoExample">
+    delete from payinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.iweb.mall.model.Payinfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into payinfo (orderid, userid, payplatform, 
+      platformnumber, platformstatus, createtime, 
+      updatetime)
+    values (#{orderid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{payplatform,jdbcType=INTEGER}, 
+      #{platformnumber,jdbcType=VARCHAR}, #{platformstatus,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iweb.mall.model.Payinfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into payinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderid != null">
+        orderid,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="payplatform != null">
+        payplatform,
+      </if>
+      <if test="platformnumber != null">
+        platformnumber,
+      </if>
+      <if test="platformstatus != null">
+        platformstatus,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderid != null">
+        #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="payplatform != null">
+        #{payplatform,jdbcType=INTEGER},
+      </if>
+      <if test="platformnumber != null">
+        #{platformnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="platformstatus != null">
+        #{platformstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.iweb.mall.model.PayinfoExample" resultType="java.lang.Long">
+    select count(*) from payinfo
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update payinfo
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderid != null">
+        orderid = #{row.orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="row.userid != null">
+        userid = #{row.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="row.payplatform != null">
+        payplatform = #{row.payplatform,jdbcType=INTEGER},
+      </if>
+      <if test="row.platformnumber != null">
+        platformnumber = #{row.platformnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="row.platformstatus != null">
+        platformstatus = #{row.platformstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createtime != null">
+        createtime = #{row.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updatetime != null">
+        updatetime = #{row.updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update payinfo
+    set id = #{row.id,jdbcType=VARCHAR},
+      orderid = #{row.orderid,jdbcType=VARCHAR},
+      userid = #{row.userid,jdbcType=VARCHAR},
+      payplatform = #{row.payplatform,jdbcType=INTEGER},
+      platformnumber = #{row.platformnumber,jdbcType=VARCHAR},
+      platformstatus = #{row.platformstatus,jdbcType=VARCHAR},
+      createtime = #{row.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{row.updatetime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iweb.mall.model.Payinfo">
+    update payinfo
+    <set>
+      <if test="orderid != null">
+        orderid = #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="payplatform != null">
+        payplatform = #{payplatform,jdbcType=INTEGER},
+      </if>
+      <if test="platformnumber != null">
+        platformnumber = #{platformnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="platformstatus != null">
+        platformstatus = #{platformstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iweb.mall.model.Payinfo">
+    update payinfo
+    set orderid = #{orderid,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=VARCHAR},
+      payplatform = #{payplatform,jdbcType=INTEGER},
+      platformnumber = #{platformnumber,jdbcType=VARCHAR},
+      platformstatus = #{platformstatus,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iweb.mall.mapper.ShoppingMapper">
+  <resultMap id="BaseResultMap" type="com.iweb.mall.model.Shopping">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="orderid" jdbcType="VARCHAR" property="orderid" />
+    <result column="receivername" jdbcType="VARCHAR" property="receivername" />
+    <result column="receiverphone" jdbcType="VARCHAR" property="receiverphone" />
+    <result column="receivermobile" jdbcType="VARCHAR" property="receivermobile" />
+    <result column="receiverprovince" jdbcType="VARCHAR" property="receiverprovince" />
+    <result column="receivercity" jdbcType="VARCHAR" property="receivercity" />
+    <result column="receiverdistrict" jdbcType="VARCHAR" property="receiverdistrict" />
+    <result column="receiveraddress" jdbcType="VARCHAR" property="receiveraddress" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, userid, orderid, receivername, receiverphone, receivermobile, receiverprovince, 
+    receivercity, receiverdistrict, receiveraddress, createtime, updatetime
+  </sql>
+  <select id="selectByExample" parameterType="com.iweb.mall.model.ShoppingExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from shopping
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from shopping
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from shopping
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.iweb.mall.model.ShoppingExample">
+    delete from shopping
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.iweb.mall.model.Shopping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into shopping (userid, orderid, receivername, 
+      receiverphone, receivermobile, receiverprovince, 
+      receivercity, receiverdistrict, receiveraddress, 
+      createtime, updatetime)
+    values (#{userid,jdbcType=VARCHAR}, #{orderid,jdbcType=VARCHAR}, #{receivername,jdbcType=VARCHAR}, 
+      #{receiverphone,jdbcType=VARCHAR}, #{receivermobile,jdbcType=VARCHAR}, #{receiverprovince,jdbcType=VARCHAR}, 
+      #{receivercity,jdbcType=VARCHAR}, #{receiverdistrict,jdbcType=VARCHAR}, #{receiveraddress,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.iweb.mall.model.Shopping">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into shopping
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="orderid != null">
+        orderid,
+      </if>
+      <if test="receivername != null">
+        receivername,
+      </if>
+      <if test="receiverphone != null">
+        receiverphone,
+      </if>
+      <if test="receivermobile != null">
+        receivermobile,
+      </if>
+      <if test="receiverprovince != null">
+        receiverprovince,
+      </if>
+      <if test="receivercity != null">
+        receivercity,
+      </if>
+      <if test="receiverdistrict != null">
+        receiverdistrict,
+      </if>
+      <if test="receiveraddress != null">
+        receiveraddress,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="receivername != null">
+        #{receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverphone != null">
+        #{receiverphone,jdbcType=VARCHAR},
+      </if>
+      <if test="receivermobile != null">
+        #{receivermobile,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverprovince != null">
+        #{receiverprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="receivercity != null">
+        #{receivercity,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverdistrict != null">
+        #{receiverdistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveraddress != null">
+        #{receiveraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.iweb.mall.model.ShoppingExample" resultType="java.lang.Long">
+    select count(*) from shopping
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update shopping
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=VARCHAR},
+      </if>
+      <if test="row.userid != null">
+        userid = #{row.userid,jdbcType=VARCHAR},
+      </if>
+      <if test="row.orderid != null">
+        orderid = #{row.orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receivername != null">
+        receivername = #{row.receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receiverphone != null">
+        receiverphone = #{row.receiverphone,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receivermobile != null">
+        receivermobile = #{row.receivermobile,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receiverprovince != null">
+        receiverprovince = #{row.receiverprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receivercity != null">
+        receivercity = #{row.receivercity,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receiverdistrict != null">
+        receiverdistrict = #{row.receiverdistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="row.receiveraddress != null">
+        receiveraddress = #{row.receiveraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="row.createtime != null">
+        createtime = #{row.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.updatetime != null">
+        updatetime = #{row.updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update shopping
+    set id = #{row.id,jdbcType=VARCHAR},
+      userid = #{row.userid,jdbcType=VARCHAR},
+      orderid = #{row.orderid,jdbcType=VARCHAR},
+      receivername = #{row.receivername,jdbcType=VARCHAR},
+      receiverphone = #{row.receiverphone,jdbcType=VARCHAR},
+      receivermobile = #{row.receivermobile,jdbcType=VARCHAR},
+      receiverprovince = #{row.receiverprovince,jdbcType=VARCHAR},
+      receivercity = #{row.receivercity,jdbcType=VARCHAR},
+      receiverdistrict = #{row.receiverdistrict,jdbcType=VARCHAR},
+      receiveraddress = #{row.receiveraddress,jdbcType=VARCHAR},
+      createtime = #{row.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{row.updatetime,jdbcType=TIMESTAMP}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.iweb.mall.model.Shopping">
+    update shopping
+    <set>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="orderid != null">
+        orderid = #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="receivername != null">
+        receivername = #{receivername,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverphone != null">
+        receiverphone = #{receiverphone,jdbcType=VARCHAR},
+      </if>
+      <if test="receivermobile != null">
+        receivermobile = #{receivermobile,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverprovince != null">
+        receiverprovince = #{receiverprovince,jdbcType=VARCHAR},
+      </if>
+      <if test="receivercity != null">
+        receivercity = #{receivercity,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverdistrict != null">
+        receiverdistrict = #{receiverdistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="receiveraddress != null">
+        receiveraddress = #{receiveraddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.iweb.mall.model.Shopping">
+    update shopping
+    set userid = #{userid,jdbcType=VARCHAR},
+      orderid = #{orderid,jdbcType=VARCHAR},
+      receivername = #{receivername,jdbcType=VARCHAR},
+      receiverphone = #{receiverphone,jdbcType=VARCHAR},
+      receivermobile = #{receivermobile,jdbcType=VARCHAR},
+      receiverprovince = #{receiverprovince,jdbcType=VARCHAR},
+      receivercity = #{receivercity,jdbcType=VARCHAR},
+      receiverdistrict = #{receiverdistrict,jdbcType=VARCHAR},
+      receiveraddress = #{receiveraddress,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
