@@ -9,6 +9,7 @@ import com.iweb.mall.portal.service.PaymentService;
 import com.iweb.mall.portal.util.QRCodeUtil;
 import com.iweb.mall.portal.util.idSupport.IIdGenerator;
 import domain.Constants;
+import exception.ApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Map<PaymentServiceImpl.PaymentUrl, String> doPay(Orders orders) {
         int payment = orders.getPayment().intValue() + orders.getPostage();
-        String paymentUrl = uriPrefix + "/pay?orderId=" + orders.getId() + "&payment=" + payment;
+        String platformNumber = String.valueOf(idGeneratorMap.get(Constants.Ids.SnowFlake).nextId());
+        String paymentUrl = uriPrefix + "/pay/callback?orderId=" + orders.getId() + "&platformNumber=" + platformNumber + "&payment=" + payment;
         String base64QRCode = QRCodeUtil.getBase64QRCode(paymentUrl);
         HashMap<PaymentUrl, String> map = new HashMap<>();
         map.put(PaymentUrl.Url, paymentUrl);
@@ -53,12 +55,30 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void callback(String orderId) {
-        publisher.publishEvent(new DonePayEvent(this, orderId));
+    public void callback(String orderId, String platformNumber) {
+        Payinfo payInfo = getPayInfoForAdmin(orderId);
+        if (ObjectUtil.isNotEmpty(payInfo)) {
+            payInfo.setPlatformstatus("已支付");
+            payInfo.setPlatformnumber(platformNumber);
+            payinfoMapper.updateByPrimaryKey(payInfo);
+            publisher.publishEvent(new DonePayEvent(this, orderId));
+        }
     }
 
     @Override
-    public Payinfo getPayInfo(String orderId) {
+    public Payinfo getPayInfo(String orderId, String userId) {
+        Payinfo payinfo = payinfoMapper.selectByOrderId(orderId);
+        if (ObjectUtil.isNotEmpty(payinfo)) {
+            if (!payinfo.getUserid().equals(userId)) {
+                throw new ApiException("该用户试图访问不属于他的支付信息!");
+            }
+            return payinfo;
+        }
+        return null;
+    }
+
+    @Override
+    public Payinfo getPayInfoForAdmin(String orderId) {
         return payinfoMapper.selectByOrderId(orderId);
     }
 
@@ -78,8 +98,17 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean isPayed(String orderId) {
-        Payinfo payinfo = getPayInfo(orderId);
+    public boolean isPayed(String orderId, String userId) {
+        Payinfo payinfo = getPayInfo(orderId, userId);
+
+        //return ObjectUtil.isNotEmpty(payinfo.getPlatformstatus());
+        return ObjectUtil.isNotEmpty(payinfo.getPlatformnumber());
+
+    }
+
+    @Override
+    public boolean isPayedForAdmin(String orderId) {
+        Payinfo payinfo = payinfoMapper.selectByOrderId(orderId);
         if (ObjectUtil.isNotEmpty(payinfo)) {
             //return ObjectUtil.isNotEmpty(payinfo.getPlatformstatus());
             return ObjectUtil.isNotEmpty(payinfo.getPlatformnumber());
@@ -92,7 +121,7 @@ public class PaymentServiceImpl implements PaymentService {
         return payinfoMapper.selectByUserId(userId);
     }
 
-    public enum PaymentUrl{
+    public enum PaymentUrl {
         Url,
         BASE64
     }
