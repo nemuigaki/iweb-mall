@@ -12,6 +12,11 @@ import cn.hutool.core.util.ObjectUtil;
 public class ParameterValidateUtil {
     private ParameterValidateUtil() {}
 
+    /**
+     * 可变参数验证工具
+     * @param parameters 需要验证的参数
+     * @return 都不为空返回true 否则返回false
+     */
     public static boolean validate(Object... parameters) {
         for (Object parameter : parameters) {
             if (ObjectUtil.isEmpty(parameter)) {

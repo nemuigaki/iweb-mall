@@ -2,6 +2,7 @@ package com.iweb.mall.portal.util;
 
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
+import com.iweb.mall.portal.domain.OrderDetails;
 
 /**
  * @Description
@@ -15,4 +16,6 @@ public class CacheUtil {
     }
 
     public static TimedCache<String, String> authCodeCache = new TimedCache<>(DateUnit.SECOND.getMillis() * 60);
+
+    public static TimedCache<String, OrderDetails> orderDetailsCache = new TimedCache<>(DateUnit.MINUTE.getMillis() * 30);
 }
