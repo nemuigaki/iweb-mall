@@ -4,6 +4,7 @@ import com.iweb.mall.model.Orders;
 import com.iweb.mall.model.OrdersExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface OrdersMapper {
     long countByExample(OrdersExample example);
@@ -27,4 +28,7 @@ public interface OrdersMapper {
     int updateByPrimaryKeySelective(Orders row);
 
     int updateByPrimaryKey(Orders row);
+
+    @Select("select * from orderitem where userid = #{userId};")
+    List<Orders> selectByUserId(String userId);
 }
