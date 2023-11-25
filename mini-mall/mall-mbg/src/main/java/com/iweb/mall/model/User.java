@@ -3,7 +3,7 @@ package com.iweb.mall.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable {
+public class User implements Serializable ,Cloneable  {
     private String id;
 
     private String username;
@@ -15,6 +15,38 @@ public class User implements Serializable {
     private Date createtime;
 
     private Date updatetime;
+
+    private Son son;
+
+    //实现深克隆的子类son
+    private class Son implements Cloneable{
+        private String id;
+
+        private String username;
+
+        private String password;
+
+        private String phone;
+
+        private Date createtime;
+
+        private Date updatetime;
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+
+    }
+
+    //重写clone方法实现克隆
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        //改写clone方法
+        User user = (User) super.clone();
+        //获取属性对象,再clone一次,让后设置到被克隆的对象中,返回
+        user.son = ((Son) user.son.clone());
+        return user;
+    }
 
     private static final long serialVersionUID = 1L;
 

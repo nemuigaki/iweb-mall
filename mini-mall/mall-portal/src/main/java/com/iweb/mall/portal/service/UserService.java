@@ -5,6 +5,7 @@ import com.iweb.mall.portal.domain.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Description
@@ -24,13 +25,13 @@ public interface UserService {
     /**
      * 根据会员编号获取会员
      */
-    User getById(Long id);
+    User getById(String id);
 
     /**
      * 用户注册
      */
     @Transactional
-    void register(String username, String password, String telephone, String authCode);
+    boolean register(String username, String password, String telephone, String authCode,String sessionId);
 
     /**
      * 生成验证码
@@ -41,6 +42,17 @@ public interface UserService {
      * 修改密码
      */
     @Transactional
-    void updatePassword(String telephone, String password, String authCode);
+    boolean updatePassword(String username, String editedUsername,String password,String editPassword, String telephone);
 
+    /**
+     * 删除用户(通过用户名或者名字删除)
+     */
+    @Transactional
+    void deleteUserByUsername(String name);
+
+    @Transactional
+    void deleteUserById(String id);
+
+    @Transactional
+    List<User> fuzzQuery(String key);
 }
