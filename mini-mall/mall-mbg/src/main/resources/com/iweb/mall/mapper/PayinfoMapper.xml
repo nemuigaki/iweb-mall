@@ -103,13 +103,13 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.iweb.mall.model.Payinfo">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into payinfo (orderid, userid, payplatform, 
+<!--    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">-->
+<!--      SELECT LAST_INSERT_ID()-->
+<!--    </selectKey>-->
+    insert into payinfo (id, orderid, userid, payplatform,
       platformnumber, platformstatus, createtime, 
       updatetime)
-    values (#{orderid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{payplatform,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{orderid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{payplatform,jdbcType=INTEGER},
       #{platformnumber,jdbcType=VARCHAR}, #{platformstatus,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
       #{updatetime,jdbcType=TIMESTAMP})
   </insert>

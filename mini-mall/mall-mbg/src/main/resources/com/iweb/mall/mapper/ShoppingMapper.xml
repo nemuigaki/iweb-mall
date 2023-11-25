@@ -108,14 +108,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.iweb.mall.model.Shopping">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into shopping (userid, orderid, receivername, 
+<!--    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">-->
+<!--      SELECT LAST_INSERT_ID()-->
+<!--    </selectKey>-->
+    insert into shopping (id, userid, orderid, receivername,
       receiverphone, receivermobile, receiverprovince, 
       receivercity, receiverdistrict, receiveraddress, 
       createtime, updatetime)
-    values (#{userid,jdbcType=VARCHAR}, #{orderid,jdbcType=VARCHAR}, #{receivername,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR},#{userid,jdbcType=VARCHAR}, #{orderid,jdbcType=VARCHAR}, #{receivername,jdbcType=VARCHAR},
       #{receiverphone,jdbcType=VARCHAR}, #{receivermobile,jdbcType=VARCHAR}, #{receiverprovince,jdbcType=VARCHAR}, 
       #{receivercity,jdbcType=VARCHAR}, #{receiverdistrict,jdbcType=VARCHAR}, #{receiveraddress,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
