@@ -1,5 +1,6 @@
 package com.iweb.mall.portal.service.impl;
 
+import api.CommonResult;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.date.DateTime;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
      * @return boolean 返回处理结果，true为成功
      */
     @Override
-    public boolean login(String username, String password, String code, String sessionId) {
+    public CommonResult login(String username, String password, String code, String sessionId) {
         /*String codeInCache = CacheUtil.authCodeCache.get(sessionId);
         if (StrUtil.isEmpty(codeInCache) || !codeInCache.equals(code)) {
             throw new ApiException("验证码错误");
@@ -50,7 +51,9 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectByUsername(username);
         //TODO 密码加密
         password = MD5Util.getMD5(password);
-        return !ObjectUtil.isEmpty(user) && user.getPassword().equals(password);
+        return !ObjectUtil.isEmpty(user) && user.getPassword().equals(password) ?
+                CommonResult.success("true") :
+                CommonResult.failed("账号或密码有误");
     }
 
     /**
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
      * @param authCode  验证码
      */
     @Override
-    public boolean register(String username, String password, String telephone, String authCode,String sessionId) {
+    public CommonResult register(String username, String password, String telephone, String authCode,String sessionId) {
         /*//检验用户输入的验证码是否正确
         String codeInCache = CacheUtil.authCodeCache.get(sessionId);
         if (StrUtil.isEmpty(codeInCache) || !codeInCache.equals(authCode)) {
@@ -84,7 +87,7 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
         System.out.println("注册成功");
 
-        return true;//若以上机制都没抛出异常则注册成功
+        return CommonResult.success("注册成功");//若以上机制都没抛出异常则注册成功
     }
 
     /**
@@ -94,9 +97,10 @@ public class UserServiceImpl implements UserService {
      * @param password  新密码密码
      */
     @Override
-    public boolean updatePassword(String username,String editedUsername,String password,String editPassword, String telephone) {
+    public CommonResult updatePassword(String username,String editedUsername,String password,String editPassword, String telephone) {
         //MD5密码加密
         String md5PassWord = MD5Util.getMD5(password);
+
         User user = userMapper.selectByUsername(username);
 
         if(!md5PassWord.equals(user.getPassword())){//如果用户填写的密码与查询出来的密码不相等就不能更改密码
@@ -107,7 +111,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUserPasswd(username,user.getPassword());
         userMapper.updateTelephone(username,user.getPhone());
         userMapper.updateUsername(username,editedUsername);
-        return true;
+        return CommonResult.success("操作成功");
     }
 
 
@@ -118,12 +122,12 @@ public class UserServiceImpl implements UserService {
      * @return User 用户实体
      */
     @Override
-    public User getByUsername(String username) {
+    public CommonResult getByUsername(String username) {
         User user = userMapper.selectByUsername(username);
         if (user == null){
             throw new ApiException("没有查询符合要求的用户");
         }
-        return user;
+        return CommonResult.success(user,"查询成功");
     }
 
 
@@ -134,12 +138,12 @@ public class UserServiceImpl implements UserService {
      * @return User 用户实体
      */
     @Override
-    public User getById(String id) {
+    public CommonResult getById(String id) {
         User user = userMapper.selectByPrimaryKey(id);
         if (user == null){
             throw new ApiException("没有查询符合要求的用户");
         }
-        return user;
+        return CommonResult.success(user,"查询成功");
     }
 
     /**
@@ -165,13 +169,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 模糊查询
      */
-    public List<User> fuzzQuery(String key){
+    public CommonResult fuzzQuery(String key){
         List<User> userList = userMapper.fuzzQuery(key);
         if (userList == null){
             throw new ApiException("未找到类似的用户");
         }
 
-        return userList;
+        return CommonResult.success(userList,"模糊查询成功");
     }
 
     //删除用户,RABC
@@ -180,19 +184,20 @@ public class UserServiceImpl implements UserService {
      */
 
     @Override
-    public void deleteUserByUsername(String username){
+    public CommonResult deleteUserByUsername(String username){
         if (userMapper.selectByUsername(username) == null){
-            throw new ApiException("查无此人");
+            return CommonResult.failed("查无此人");
         }
-        userMapper.deleteByUserName(username);
+       return CommonResult.success(userMapper.deleteByUserName(username),"删除成功");
     }
 
 
     @Override
-    public void deleteUserById(String id) {
+    public CommonResult deleteUserById(String id) {
         if (userMapper.selectByPrimaryKey(id) == null){
-            throw new ApiException("查无此人");
+            return CommonResult.failed("查无此人");
         }
         userMapper.deleteByPrimaryKey(id);
+        return CommonResult.success("删除成功");
     }
 }

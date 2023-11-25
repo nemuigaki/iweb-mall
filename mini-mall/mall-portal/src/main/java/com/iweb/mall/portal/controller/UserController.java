@@ -48,8 +48,7 @@ public class UserController {
         if (!password.equals(confirmPassword)){
             return CommonResult.failed("请确认两次输入的密码是相同的");
         }
-        userService.register(username, password, telephone, authCode,request.getSession().getId());
-        return CommonResult.success(null, "注册成功");
+        return userService.register(username, password, telephone, authCode,request.getSession().getId());
     }
 
     @ApiOperation("会员登录")
@@ -63,14 +62,7 @@ public class UserController {
             return CommonResult.validateFailed("表单输入不完整");
         }
 
-        boolean token = userService.login(username, password, code, request.getSession().getId());
-        if (!token) {
-            return CommonResult.validateFailed("用户名或密码错误");
-        }
-        //Map<String, String> tokenMap = new HashMap<>();
-        //tokenMap.put("token", token);
-        //tokenMap.put("tokenHead", tokenHead);
-        return CommonResult.success("login success");
+        return userService.login(username, password, code, request.getSession().getId());
     }
 
     @ApiOperation("会员修改个人信息")
@@ -94,8 +86,8 @@ public class UserController {
         if (editedUsername == null && editedPassword == null && telephone == null){
             return CommonResult.validateFailed("请填写至少一项属性来修改");
         }
-        userService.updatePassword(username,editedUsername,password,editedPassword,telephone);
-        return CommonResult.success("修改成功");
+        return userService.updatePassword(username,editedUsername,password,editedPassword,telephone);
+
     }
 
     @ApiOperation("获取验证码")
@@ -131,8 +123,7 @@ public class UserController {
         if (!ParameterValidateUtil.validate(id)) {
             return CommonResult.validateFailed("查询ID不能为空");
         }
-        userService.getById(id);
-        return CommonResult.success(null,"查询成功");
+        return userService.getById(id);
     }
 
     @ApiOperation("根据用户名删除用户")
@@ -145,8 +136,7 @@ public class UserController {
         if (!ParameterValidateUtil.validate(username)) {
             return CommonResult.validateFailed("要删除的用户名不能为空");
         }
-        userService.deleteUserByUsername(username);
-        return CommonResult.success(null,"删除成功");
+        return userService.deleteUserByUsername(username);
     }
 
 
@@ -161,8 +151,7 @@ public class UserController {
         if (!ParameterValidateUtil.validate(id)) {
             return CommonResult.validateFailed("删除的用户id不能为空");
         }
-        userService.deleteUserById(id);
-        return CommonResult.success(null,"删除成功");
+        return userService.deleteUserById(id);
     }
 
     @ApiOperation("模糊查询")
@@ -175,7 +164,6 @@ public class UserController {
         if (!ParameterValidateUtil.validate(key)) {
             return CommonResult.failed("key值不能为空值");
         }
-        List<User> users = userService.fuzzQuery(key);
-        return CommonResult.success(users,"查询成功");
+        return userService.fuzzQuery(key);
     }
 }
