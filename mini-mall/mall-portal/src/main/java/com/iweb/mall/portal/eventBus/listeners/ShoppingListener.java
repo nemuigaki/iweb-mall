@@ -1,6 +1,5 @@
 package com.iweb.mall.portal.eventBus.listeners;
 
-import com.iweb.mall.mapper.PayinfoMapper;
 import com.iweb.mall.mapper.ProductMapper;
 import com.iweb.mall.mapper.ShoppingMapper;
 import com.iweb.mall.model.*;
@@ -11,6 +10,7 @@ import com.iweb.mall.portal.service.PaymentService;
 import com.iweb.mall.portal.util.idSupport.IIdGenerator;
 import domain.Constants;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -47,11 +47,10 @@ public class ShoppingListener {
         // 生成/获取ids
         String shoppingId = String.valueOf(idGeneratorMap.get(Constants.Ids.SnowFlake).nextId());
         String userId = shopping.getUserid();
-        String orderId;
+        String orderId = shopping.getOrderid();
 
         // 创建订单和子订单
-        Orders order = orderService.createOrder(userId, shoppingId);
-        orderId =order.getId();
+        Orders order = orderService.createOrder(orderId, userId, shoppingId);
         List<Orderitem> orderitemList = new ArrayList<>();
         cartList.forEach(item->{
             Product product = productMapper.selectByPrimaryKey(item.getProid());

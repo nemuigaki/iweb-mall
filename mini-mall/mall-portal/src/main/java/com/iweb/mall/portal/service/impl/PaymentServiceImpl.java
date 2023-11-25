@@ -6,6 +6,7 @@ import com.iweb.mall.model.Orders;
 import com.iweb.mall.model.Payinfo;
 import com.iweb.mall.portal.eventBus.events.DonePayEvent;
 import com.iweb.mall.portal.service.PaymentService;
+import com.iweb.mall.portal.util.CacheUtil;
 import com.iweb.mall.portal.util.QRCodeUtil;
 import com.iweb.mall.portal.util.idSupport.IIdGenerator;
 import domain.Constants;
@@ -60,7 +61,10 @@ public class PaymentServiceImpl implements PaymentService {
         if (ObjectUtil.isNotEmpty(payInfo)) {
             payInfo.setPlatformstatus("已支付");
             payInfo.setPlatformnumber(platformNumber);
+            // 入库
             payinfoMapper.updateByPrimaryKey(payInfo);
+            // 更新缓存
+            CacheUtil.orderDetailsCache.get(orderId).setPayinfo(payInfo);
             publisher.publishEvent(new DonePayEvent(this, orderId));
         }
     }

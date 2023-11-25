@@ -109,15 +109,15 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.iweb.mall.model.Orders">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into orders (userid, shoppingid, payment, 
+<!--    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">-->
+<!--      SELECT LAST_INSERT_ID()-->
+<!--    </selectKey>-->
+    insert into orders (id, userid, shoppingid, payment,
       paymenttype, postage, status, 
       paymenttime, sendtime, endtime, 
       closetime, createtime, updatetime
       )
-    values (#{userid,jdbcType=VARCHAR}, #{shoppingid,jdbcType=VARCHAR}, #{payment,jdbcType=DECIMAL}, 
+    values (#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{shoppingid,jdbcType=VARCHAR}, #{payment,jdbcType=DECIMAL},
       #{paymenttype,jdbcType=INTEGER}, #{postage,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{paymenttime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, 
       #{closetime,jdbcType=TIMESTAMP}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}

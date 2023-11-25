@@ -4,6 +4,7 @@ import com.iweb.mall.model.Shopping;
 import com.iweb.mall.model.ShoppingExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface ShoppingMapper {
     long countByExample(ShoppingExample example);
@@ -27,4 +28,7 @@ public interface ShoppingMapper {
     int updateByPrimaryKeySelective(Shopping row);
 
     int updateByPrimaryKey(Shopping row);
+
+    @Select("select * from shopping where orderid = #{orderid}")
+    Shopping selectByOrderId(String orderId);
 }

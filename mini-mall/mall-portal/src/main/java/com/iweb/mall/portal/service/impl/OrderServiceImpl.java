@@ -3,10 +3,11 @@ package com.iweb.mall.portal.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.iweb.mall.mapper.OrderitemMapper;
 import com.iweb.mall.mapper.OrdersMapper;
-import com.iweb.mall.model.Orderitem;
-import com.iweb.mall.model.Orders;
-import com.iweb.mall.model.Product;
+import com.iweb.mall.mapper.PayinfoMapper;
+import com.iweb.mall.mapper.ShoppingMapper;
+import com.iweb.mall.model.*;
 import com.iweb.mall.portal.domain.OrderDetails;
+import com.iweb.mall.portal.eventBus.events.DoPayEvent;
 import com.iweb.mall.portal.service.OrderService;
 import com.iweb.mall.portal.util.CacheUtil;
 import com.iweb.mall.portal.util.ParameterValidateUtil;
@@ -14,6 +15,7 @@ import com.iweb.mall.portal.util.idSupport.IIdGenerator;
 import domain.Constants;
 import exception.ApiException;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,13 +36,21 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     private OrdersMapper ordersMapper;
     private OrderitemMapper orderitemMapper;
+    private ShoppingMapper shoppingMapper;
+    private PayinfoMapper payinfoMapper;
     private Map<Constants.Ids, IIdGenerator> idGeneratorMap;
+    private final ApplicationEventPublisher publisher;
+
 
     @Override
     public Orders createOrder(String userId, String shoppingId) {
-        Orders orders = new Orders();
         String id = String.valueOf(idGeneratorMap.get(Constants.Ids.SnowFlake).nextId());
-        orders.setId(id);
+        return createOrder(id, userId, shoppingId);
+    }
+
+    public Orders createOrder(String orderId, String userId, String shoppingId) {
+        Orders orders = new Orders();
+        orders.setId(orderId);
         orders.setUserid(userId);
         orders.setShoppingid(shoppingId);
         orders.setPaymenttype(1);
@@ -97,7 +107,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 缓存订单信息
         CacheUtil.orderDetailsCache.put(orderId, orderDetails);
-
+        publisher.publishEvent(new DoPayEvent(this, order));
     }
 
     @Override
@@ -118,5 +128,25 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void afterPayed(String orderId) {
         // TODO 更新订单状态
+    }
+
+    @Override
+    public OrderDetails getOrderDetails(String orderId) {
+        OrderDetails orderDetails = CacheUtil.orderDetailsCache.get(orderId);
+        if (ObjectUtil.isNotEmpty(orderDetails)) {
+            return orderDetails;
+        }
+        orderDetails = new OrderDetails();
+        Orders orders = ordersMapper.selectByPrimaryKey(orderId);
+        if (ObjectUtil.isEmpty(orders)) {
+            throw new ApiException("试图获取不存在的订单");
+        }
+        orderDetails.setOrders(orders);
+        orderDetails.setOrderItems(orderitemMapper.selectByOrdersId(orderId));
+        orderDetails.setShopping(shoppingMapper.selectByOrderId(orderId));
+        orderDetails.setPayinfo(payinfoMapper.selectByOrderId(orderId));
+        CacheUtil.orderDetailsCache.put(orderId, orderDetails);
+
+        return orderDetails;
     }
 }

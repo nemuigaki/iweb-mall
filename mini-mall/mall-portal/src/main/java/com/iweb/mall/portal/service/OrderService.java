@@ -13,6 +13,8 @@ import com.iweb.mall.portal.domain.OrderDetails;
 public interface OrderService {
     Orders createOrder(String userId, String shoppingId);
 
+    Orders createOrder(String orderId, String userId, String shoppingId);
+
     Orderitem createOrderItem(String orderId, String userId, Product product, int quantity);
 
     Orderitem createOrderItem(Orderitem orderitem, Product product);
@@ -28,4 +30,6 @@ public interface OrderService {
     void updatePayment();
 
     void afterPayed(String orderId);
+
+    OrderDetails getOrderDetails(String orderId);
 }
