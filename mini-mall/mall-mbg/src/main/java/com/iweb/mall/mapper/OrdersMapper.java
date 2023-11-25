@@ -5,6 +5,7 @@ import com.iweb.mall.model.OrdersExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 public interface OrdersMapper {
     long countByExample(OrdersExample example);
@@ -31,4 +32,7 @@ public interface OrdersMapper {
 
     @Select("select * from orderitem where userid = #{userId};")
     List<Orders> selectByUserId(String userId);
+
+    @Update("update orders set status = #{state} where id = #{orderId}")
+    int setState(String orderId, int state);
 }

@@ -1,5 +1,6 @@
 package com.iweb.mall.portal.service.impl;
 
+import api.CommonResult;
 import cn.hutool.core.util.ObjectUtil;
 import com.iweb.mall.mapper.OrderitemMapper;
 import com.iweb.mall.mapper.OrdersMapper;
@@ -9,6 +10,7 @@ import com.iweb.mall.model.*;
 import com.iweb.mall.portal.domain.OrderDetails;
 import com.iweb.mall.portal.eventBus.events.DoPayEvent;
 import com.iweb.mall.portal.service.OrderService;
+import com.iweb.mall.portal.stateFlow.IStateHandler;
 import com.iweb.mall.portal.util.CacheUtil;
 import com.iweb.mall.portal.util.ParameterValidateUtil;
 import com.iweb.mall.portal.util.idSupport.IIdGenerator;
@@ -19,10 +21,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @Description
@@ -40,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     private PayinfoMapper payinfoMapper;
     private Map<Constants.Ids, IIdGenerator> idGeneratorMap;
     private final ApplicationEventPublisher publisher;
+    private IStateHandler stateHandler;
 
 
     @Override
@@ -54,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
         orders.setUserid(userId);
         orders.setShoppingid(shoppingId);
         orders.setPaymenttype(1);
+        orders.setStatus(10);
         orders.setPostage(6);
         Date date = new Date();
         orders.setCreatetime(date);
@@ -126,15 +127,40 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void afterPayed(String orderId) {
-        // TODO 更新订单状态
+    public CommonResult afterPayed(String orderId) {
+        Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
+        return stateHandler.pay(orderId, currentState);
     }
 
     @Override
-    public OrderDetails getOrderDetails(String orderId) {
+    public CommonResult afterDelivered(String orderId) {
+        Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
+        return stateHandler.pay(orderId, currentState);
+    }
+
+    @Override
+    public CommonResult afterDone(String orderId) {
+        Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
+        return stateHandler.pay(orderId, currentState);
+    }
+
+    @Override
+    public CommonResult afterClose(String orderId) {
+        Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
+        return stateHandler.pay(orderId, currentState);
+    }
+
+    @Override
+    public CommonResult afterCanceled(String orderId) {
+        Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
+        return stateHandler.pay(orderId, currentState);
+    }
+
+    @Override
+    public CommonResult getOrderDetails(String orderId) {
         OrderDetails orderDetails = CacheUtil.orderDetailsCache.get(orderId);
         if (ObjectUtil.isNotEmpty(orderDetails)) {
-            return orderDetails;
+            return CommonResult.success(orderDetails);
         }
         orderDetails = new OrderDetails();
         Orders orders = ordersMapper.selectByPrimaryKey(orderId);
@@ -147,6 +173,46 @@ public class OrderServiceImpl implements OrderService {
         orderDetails.setPayinfo(payinfoMapper.selectByOrderId(orderId));
         CacheUtil.orderDetailsCache.put(orderId, orderDetails);
 
-        return orderDetails;
+        return CommonResult.success(orderDetails);
+    }
+
+    @Override
+    public CommonResult getOrderDetailsByUserId(String uerId) {
+        List<Orders> orders = ordersMapper.selectByUserId(uerId);
+        ArrayList<OrderDetails> orderDetails = new ArrayList<>();
+        if (ObjectUtil.isNotEmpty(orders)) {
+            for (Orders order : orders) {
+                String id = order.getId();
+                List<Orderitem> orderitemList = orderitemMapper.selectByOrdersId(id);
+                Shopping shopping = shoppingMapper.selectByOrderId(id);
+                Payinfo payinfo = payinfoMapper.selectByOrderId(id);
+                OrderDetails orderDetail = new OrderDetails();
+                orderDetail.setOrders(order);
+                orderDetail.setOrderItems(orderitemList);
+                orderDetail.setShopping(shopping);
+                orderDetail.setPayinfo(payinfo);
+                orderDetails.add(orderDetail);
+                CacheUtil.orderDetailsCache.put(id, orderDetail);
+            }
+        }
+
+        return CommonResult.success(orderDetails);
+    }
+
+    @Override
+    public Enum<Constants.OrderState> getOrderStateByCache(String orderId) {
+        Enum<Constants.OrderState> currentState = CacheUtil.stateMap.get(orderId);
+        if (ObjectUtil.isEmpty(currentState)) {
+            Orders order = ordersMapper.selectByPrimaryKey(orderId);
+            currentState = Constants.OrderState.getState(order.getStatus());
+            CacheUtil.stateMap.put(orderId, currentState);
+        }
+        return currentState;
+    }
+
+    @Override
+    public CommonResult selectOrderItemsByProName(String userId, String proName) {
+        List<Orderitem> orderitemList = orderitemMapper.selectOrderItemByProName(userId, proName);
+        return CommonResult.success(orderitemList);
     }
 }

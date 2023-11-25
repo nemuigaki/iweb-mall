@@ -3,6 +3,7 @@ package com.iweb.mall.portal.service;
 import com.iweb.mall.model.Orders;
 import com.iweb.mall.model.Payinfo;
 import com.iweb.mall.portal.service.impl.PaymentServiceImpl;
+import domain.Constants;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @Package com.iweb.mall.portal.service
  */
 public interface PaymentService {
-    Map<PaymentServiceImpl.PaymentUrl, String> doPay(Orders orders);
+    Map<Constants.PaymentUrl, String> doPay(Orders orders);
 
     void callback(String orderId, String platformNumber);
 

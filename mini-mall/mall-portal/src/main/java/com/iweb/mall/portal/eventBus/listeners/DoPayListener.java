@@ -5,6 +5,7 @@ import com.iweb.mall.portal.eventBus.events.DoPayEvent;
 import com.iweb.mall.portal.service.PaymentService;
 import com.iweb.mall.portal.service.impl.PaymentServiceImpl;
 import com.iweb.mall.portal.util.CacheUtil;
+import domain.Constants;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.event.EventListener;
@@ -32,8 +33,8 @@ public class DoPayListener {
     @EventListener(DoPayEvent.class)
     public void doPay(DoPayEvent doPayEvent) {
         Orders orders = doPayEvent.getOrders();
-        SynchronousQueue<Map<PaymentServiceImpl.PaymentUrl, String>> map = CacheUtil.payMap.get(orders.getId());
-        Map<PaymentServiceImpl.PaymentUrl, String> payInfoStringMap = paymentService.doPay(orders);
+        SynchronousQueue<Map<Constants.PaymentUrl, String>> map = CacheUtil.payMap.get(orders.getId());
+        Map<Constants.PaymentUrl, String> payInfoStringMap = paymentService.doPay(orders);
         map.put(payInfoStringMap);
     }
 }

@@ -1,7 +1,11 @@
 package com.iweb.mall.portal.service;
 
-import com.iweb.mall.model.*;
+import api.CommonResult;
+import com.iweb.mall.model.Orderitem;
+import com.iweb.mall.model.Orders;
+import com.iweb.mall.model.Product;
 import com.iweb.mall.portal.domain.OrderDetails;
+import domain.Constants;
 
 /**
  * @Description
@@ -29,7 +33,21 @@ public interface OrderService {
 
     void updatePayment();
 
-    void afterPayed(String orderId);
+    CommonResult afterPayed(String orderId);
 
-    OrderDetails getOrderDetails(String orderId);
+    CommonResult afterDelivered(String orderId);
+
+    CommonResult afterDone(String orderId);
+
+    CommonResult afterClose(String orderId);
+
+    CommonResult afterCanceled(String orderId);
+
+    CommonResult getOrderDetails(String orderId);
+
+    CommonResult getOrderDetailsByUserId(String userId);
+
+    Enum<Constants.OrderState> getOrderStateByCache(String orderId);
+
+    CommonResult selectOrderItemsByProName(String userId, String proIName);
 }

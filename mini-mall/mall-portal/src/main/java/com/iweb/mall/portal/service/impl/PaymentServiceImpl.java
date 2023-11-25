@@ -44,14 +44,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Map<PaymentServiceImpl.PaymentUrl, String> doPay(Orders orders) {
+    public Map<Constants.PaymentUrl, String> doPay(Orders orders) {
         int payment = orders.getPayment().intValue() + orders.getPostage();
         String platformNumber = String.valueOf(idGeneratorMap.get(Constants.Ids.SnowFlake).nextId());
         String paymentUrl = uriPrefix + "/pay/callback?orderId=" + orders.getId() + "&platformNumber=" + platformNumber + "&payment=" + payment;
         String base64QRCode = QRCodeUtil.getBase64QRCode(paymentUrl);
-        HashMap<PaymentUrl, String> map = new HashMap<>();
-        map.put(PaymentUrl.Url, paymentUrl);
-        map.put(PaymentUrl.BASE64, base64QRCode);
+        HashMap<Constants.PaymentUrl, String> map = new HashMap<>();
+        map.put(Constants.PaymentUrl.Url, paymentUrl);
+        map.put(Constants.PaymentUrl.BASE64, base64QRCode);
         return map;
     }
 
@@ -123,10 +123,5 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<Payinfo> getPayInfosByUserId(String userId) {
         return payinfoMapper.selectByUserId(userId);
-    }
-
-    public enum PaymentUrl {
-        Url,
-        BASE64
     }
 }

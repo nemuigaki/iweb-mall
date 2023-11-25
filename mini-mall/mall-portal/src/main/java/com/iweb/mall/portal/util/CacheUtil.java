@@ -3,11 +3,10 @@ package com.iweb.mall.portal.util;
 import cn.hutool.cache.impl.TimedCache;
 import cn.hutool.core.date.DateUnit;
 import com.iweb.mall.portal.domain.OrderDetails;
-import com.iweb.mall.portal.service.impl.PaymentServiceImpl;
-import lombok.SneakyThrows;
+import domain.Constants;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.SynchronousQueue;
 
 /**
@@ -23,8 +22,10 @@ public class CacheUtil {
 
     public static TimedCache<String, String> authCodeCache = new TimedCache<>(DateUnit.SECOND.getMillis() * 60);
 
-    public static TimedCache<String, OrderDetails> orderDetailsCache = new TimedCache<>(DateUnit.MINUTE.getMillis() * 30);
+    public static TimedCache<String, OrderDetails> orderDetailsCache = new TimedCache<>(DateUnit.DAY.getMillis() * 5);
 
-    public static HashMap<String, SynchronousQueue<Map<PaymentServiceImpl.PaymentUrl, String>>> payMap = new HashMap<>();
+    public static Map<String, SynchronousQueue<Map<Constants.PaymentUrl, String>>> payMap = new ConcurrentHashMap<>();
+
+    public static TimedCache<String, Enum<Constants.OrderState>> stateMap = new TimedCache<>(DateUnit.MINUTE.getMillis() * 30);
 
 }

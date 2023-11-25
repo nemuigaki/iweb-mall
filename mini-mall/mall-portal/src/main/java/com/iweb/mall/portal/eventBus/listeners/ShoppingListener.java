@@ -7,6 +7,8 @@ import com.iweb.mall.portal.domain.OrderDetails;
 import com.iweb.mall.portal.eventBus.events.ShoppingEvent;
 import com.iweb.mall.portal.service.OrderService;
 import com.iweb.mall.portal.service.PaymentService;
+import com.iweb.mall.portal.stateFlow.event.CreateState;
+import com.iweb.mall.portal.util.CacheUtil;
 import com.iweb.mall.portal.util.idSupport.IIdGenerator;
 import domain.Constants;
 import lombok.AllArgsConstructor;
@@ -57,6 +59,9 @@ public class ShoppingListener {
             Orderitem orderItem = orderService.createOrderItem(orderId, userId, product, item.getQuantity());
             orderitemList.add(orderItem);
         });
+
+        // 将订单状态添加到管理缓存中
+        CacheUtil.stateMap.put(orderId, Constants.OrderState.getState(order.getStatus()));
 
         // 创建支付信息
         Payinfo payInfo = paymentService.createPayInfo(order);

@@ -31,4 +31,7 @@ public interface OrderitemMapper {
 
     @Select("select * from orderitem where orderid = #{orderId}")
     List<Orderitem> selectByOrdersId(String orderId);
+
+    @Select("select * from orderitem where userid = #{userId} and proname = #{proName}")
+    List<Orderitem> selectOrderItemByProName(String userId, String proName);
 }
