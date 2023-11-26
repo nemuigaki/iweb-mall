@@ -1,6 +1,7 @@
 package com.iweb.mall.portal.stateFlow.event;
 
 import api.CommonResult;
+import api.ResultCode;
 import com.iweb.mall.portal.stateFlow.AbstractState;
 import domain.Constants;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class PaySate extends AbstractState {
     @Override
     public CommonResult pay(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("已付款, 请勿重复支付");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "已付款, 请勿重复支付");
     }
 
     @Override
@@ -27,17 +28,22 @@ public class PaySate extends AbstractState {
 
     @Override
     public CommonResult done(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("未支付, 交易不能设置为成功状态");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "未支付, 交易不能设置为成功状态");
     }
 
     @Override
     public CommonResult close(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("未支付, 交易不能设置为关闭状态");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "未支付, 交易不能设置为关闭状态");
     }
 
     @Override
     public CommonResult cancel(String orderId, Enum<Constants.OrderState> currentState) {
-        // TODO 支付成功未发货可以取消订单
-        return null;
+        boolean res = ordersMapper.setState(orderId, Constants.OrderState.Canceled.getCode()) > 0;
+        if (res) {
+            // TODO 通知库存服务释放对应的库存, 以及收款服务退还支付部分
+            return CommonResult.success("取消成功, 按付款路径返回款项");
+        } else {
+            return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "取消失败");
+        }
     }
 }

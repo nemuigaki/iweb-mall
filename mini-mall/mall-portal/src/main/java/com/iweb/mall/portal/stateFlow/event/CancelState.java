@@ -1,6 +1,7 @@
 package com.iweb.mall.portal.stateFlow.event;
 
 import api.CommonResult;
+import api.ResultCode;
 import com.iweb.mall.portal.stateFlow.AbstractState;
 import domain.Constants;
 import org.springframework.stereotype.Component;
@@ -16,26 +17,26 @@ import org.springframework.stereotype.Component;
 public class CancelState extends AbstractState {
     @Override
     public CommonResult pay(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("交易已取消, 不能支付");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "交易已取消, 不能支付");
     }
 
     @Override
     public CommonResult deliver(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("交易已取消, 不能发货");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "交易已取消, 不能发货");
     }
 
     @Override
     public CommonResult done(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("交易已取消, 不能完成");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "交易已取消, 不能完成");
     }
 
     @Override
     public CommonResult close(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("交易已取消, 不能关闭");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "交易已取消, 不能关闭");
     }
 
     @Override
     public CommonResult cancel(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("交易已取消, 不能重复取消");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "交易已取消, 不能重复取消");
     }
 }

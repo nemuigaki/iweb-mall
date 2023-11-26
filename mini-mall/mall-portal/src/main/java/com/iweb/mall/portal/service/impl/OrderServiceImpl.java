@@ -135,25 +135,25 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public CommonResult afterDelivered(String orderId) {
         Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
-        return stateHandler.pay(orderId, currentState);
+        return stateHandler.deliver(orderId, currentState);
     }
 
     @Override
     public CommonResult afterDone(String orderId) {
         Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
-        return stateHandler.pay(orderId, currentState);
+        return stateHandler.done(orderId, currentState);
     }
 
     @Override
     public CommonResult afterClose(String orderId) {
         Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
-        return stateHandler.pay(orderId, currentState);
+        return stateHandler.close(orderId, currentState);
     }
 
     @Override
     public CommonResult afterCanceled(String orderId) {
         Enum<Constants.OrderState> currentState = getOrderStateByCache(orderId);
-        return stateHandler.pay(orderId, currentState);
+        return stateHandler.cancel(orderId, currentState);
     }
 
     @Override

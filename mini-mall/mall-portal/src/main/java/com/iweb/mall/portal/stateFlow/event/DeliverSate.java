@@ -1,6 +1,7 @@
 package com.iweb.mall.portal.stateFlow.event;
 
 import api.CommonResult;
+import api.ResultCode;
 import com.iweb.mall.portal.stateFlow.AbstractState;
 import domain.Constants;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,12 @@ import org.springframework.stereotype.Component;
 public class DeliverSate extends AbstractState {
     @Override
     public CommonResult pay(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("已发货, 不能继续支付");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "已发货, 不能继续支付");
     }
 
     @Override
     public CommonResult deliver(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("已发货， 不能重复操作");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "已发货， 不能重复操作");
     }
 
     @Override
@@ -32,11 +33,11 @@ public class DeliverSate extends AbstractState {
 
     @Override
     public CommonResult close(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("已发货， 不能关闭交易");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "已发货， 不能关闭交易");
     }
 
     @Override
     public CommonResult cancel(String orderId, Enum<Constants.OrderState> currentState) {
-        return CommonResult.failed("已发货, 不能取消订单");
+        return CommonResult.failed(ResultCode.ORDER_STATE_OPERATE_FAILED, "已发货, 不能取消订单");
     }
 }
