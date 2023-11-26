@@ -54,8 +54,9 @@ public class OrderServiceImpl implements OrderService {
         orders.setUserid(userId);
         orders.setShoppingid(shoppingId);
         orders.setPaymenttype(1);
-        orders.setStatus(10);
-        orders.setPostage(6);
+        // 取消使用魔法值 使用定义的枚举类来获取订单状态码
+        orders.setStatus(Constants.OrderState.Created.getCode());
+        orders.setPostage(Constants.Postage.NormalDistance.getPostage());
         Date date = new Date();
         orders.setCreatetime(date);
         orders.setUpdatetime(date);
@@ -94,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void doShopping(OrderDetails orderDetails) {
+    public void doShopping(long startTime,OrderDetails orderDetails) {
         // 检查订单信息
         Orders order = orderDetails.getOrders();
         String orderId = order.getId();
@@ -108,7 +109,13 @@ public class OrderServiceImpl implements OrderService {
 
         // 缓存订单信息
         CacheUtil.orderDetailsCache.put(orderId, orderDetails);
-        publisher.publishEvent(new DoPayEvent(this, order));
+        // 通知支付系统生成支付码和支付链接
+        publisher.publishEvent(new DoPayEvent(this, order, new HashMap<>()));
+
+
+        if (System.currentTimeMillis() - startTime > 3000) {
+            throw new RuntimeException("业务超时回滚, 业务服务者{userId=" + order.getUserid() + "}");
+        }
     }
 
     @Override

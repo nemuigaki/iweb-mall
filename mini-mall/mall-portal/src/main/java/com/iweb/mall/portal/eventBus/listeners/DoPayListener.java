@@ -34,7 +34,7 @@ public class DoPayListener {
     public void doPay(DoPayEvent doPayEvent) {
         Orders orders = doPayEvent.getOrders();
         SynchronousQueue<Map<Constants.PaymentUrl, String>> map = CacheUtil.payMap.get(orders.getId());
-        Map<Constants.PaymentUrl, String> payInfoStringMap = paymentService.doPay(orders);
+        Map<Constants.PaymentUrl, String> payInfoStringMap = paymentService.doPay(orders, doPayEvent.getMap());
         map.put(payInfoStringMap);
     }
 }

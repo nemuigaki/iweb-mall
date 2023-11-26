@@ -51,6 +51,9 @@ public class ShoppingListener {
         String userId = shopping.getUserid();
         String orderId = shopping.getOrderid();
 
+        // 记录开始时间
+        long startTime = System.currentTimeMillis();
+
         // 创建订单和子订单
         Orders order = orderService.createOrder(orderId, userId, shoppingId);
         List<Orderitem> orderitemList = new ArrayList<>();
@@ -80,6 +83,7 @@ public class ShoppingListener {
         orderDetails.setShopping(shopping);
         orderDetails.setPayinfo(payInfo);
 
-        orderService.doShopping(orderDetails);
+        orderService.doShopping(startTime, orderDetails);
+
     }
 }

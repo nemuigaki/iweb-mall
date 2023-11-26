@@ -1,5 +1,7 @@
 package domain;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ public class Constants {
         BASE64
     }
 
+    @Getter
     public enum OrderState {
         Canceled(0, "交易取消"),
         Created(10, "订单创建, 未付款"),
@@ -50,16 +53,8 @@ public class Constants {
             this.info = info;
         }
 
-        public Integer getCode() {
-            return code;
-        }
-
         public void setCode(Integer code) {
             this.code = code;
-        }
-
-        public String getInfo() {
-            return info;
         }
 
         public void setInfo(String info) {
@@ -75,5 +70,31 @@ public class Constants {
         public static OrderState getState(int code) {
             return stateMap.get(code);
         }
+    }
+
+    @Getter
+    public enum Postage {
+        SameCity(4, 500),
+        NormalDistance(6, 300),
+        LongDistance(8, Integer.MAX_VALUE);
+
+        private int postage;
+        private double distance;
+
+        Postage(int postage, double distance) {
+            this.postage = postage;
+            this.distance = distance;
+        }
+
+
+        public static int getPostageByDistance(double distance) {
+            for (Postage value : Postage.values()) {
+                if (value.getDistance() > distance) {
+                    return value.postage;
+                }
+            }
+            return -1;
+        }
+
     }
 }

@@ -25,7 +25,7 @@ public interface OrderService {
 
     void batchStoreOrderItem();
 
-    void doShopping(OrderDetails orderDetails);
+    void doShopping(long startTime, OrderDetails orderDetails);
 
     void cancelOrder();
 
