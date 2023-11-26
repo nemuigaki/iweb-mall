@@ -102,13 +102,13 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.iweb.mall.model.Cart">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into cart (userid, proid, quantity, 
+<!--    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">-->
+<!--      SELECT LAST_INSERT_ID()-->
+<!--    </selectKey>-->
+    insert into cart (id, userid, proid, quantity,
       checked, createtime, updatetime
       )
-    values (#{userid,jdbcType=VARCHAR}, #{proid,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{proid,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER},
       #{checked,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}
       )
   </insert>

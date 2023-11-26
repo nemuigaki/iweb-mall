@@ -12,7 +12,27 @@ public class Cart implements Serializable {
 
     private Integer quantity;
 
+//    private Double proPrice;
+//
+//    private Double totalPrice;
+//
+//    public Double getTotalPrice() {
+//        return totalPrice;
+//    }
+//
+//    public void setTotalPrice(Double totalPrice) {
+//        this.totalPrice = totalPrice;
+//    }
+
     private Integer checked;
+
+//    public Double getProPrice() {
+//        return proPrice;
+//    }
+//
+//    public void setProPrice(Double proPrice) {
+//        this.proPrice = proPrice;
+//    }
 
     private Date createtime;
 
