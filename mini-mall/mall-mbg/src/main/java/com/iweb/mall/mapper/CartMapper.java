@@ -45,5 +45,5 @@ public interface CartMapper {
     Integer selectOrNot(@Param("userid") String userid,
                         @Param("proid") String proid,
                         @Param("checked") Integer checked);
-    
+
 }
