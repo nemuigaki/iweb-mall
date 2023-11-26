@@ -13,6 +13,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-@MapperScan({"com.iweb.mall.mapper","com.iweb.mall.portal.dao"})
+@MapperScan({"com.iweb.mall.mapper", "com.iweb.mall.portal.repository"})
 public class MyBatisConfig {
 }
